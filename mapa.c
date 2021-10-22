@@ -24,6 +24,18 @@ int ehVazia(MAPA* m, int x, int y){
     return m->matriz[x][y] == VAZIO;
 }
 
+int podeAndar(MAPA* m,char personagem, int x, int y){
+    return ehvalida(m,x,y) && !ehParede(m, x, y) && !ehPersongagem(m, personagem, x,y);
+}
+
+int ehParede(MAPA* m, int x, int y){
+    return m->matriz[x][y] == PAREDEVERTICAL || m->matriz[x][y] == PAREDEHORIZONTAL;
+}
+
+int ehPersongagem(MAPA* m,char personagem, int x, int y){
+    return m->matriz[x][y] == personagem;
+}
+
 void andanomapa(MAPA* m, int xorigem, int yorigem, 
     int xdestino, int ydestino) {
 
@@ -33,16 +45,17 @@ void andanomapa(MAPA* m, int xorigem, int yorigem,
 
 }
 
-void findMap(MAPA* m, POSITION* p, char c){
+int findMap(MAPA* m, POSITION* p, char c){
     for(int i = 0; i < m->linhas; i++){
         for(int j = 0; j < m->colunas; j++){
             if(m->matriz[i][j] == c){
                 p->x = i;
                 p->y = j;
-                break;
+                return 1;
             }
         }
     }
+    return 0;
 }
 
 void freeMap(MAPA* m){
@@ -79,8 +92,3 @@ void readsMap(MAPA* m){
     fclose(f);
 }
 
-void printsMap(MAPA* m){
-    for(int i = 0; i < m->linhas; i++){
-        printf("%s\n", m->matriz[i]);
-    }
-}
